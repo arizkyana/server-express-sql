@@ -1,10 +1,10 @@
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-import { PORT } from "./helpers/env";
+import cors from "cors";
 
+import { PORT } from "./helpers/env";
 import { AppDataSource } from "./data-source";
-// import { User } from "./entity/User";
 
 import router from "./routes/api";
 
@@ -16,6 +16,11 @@ async function init() {
 
     app.use(morgan("combined"));
     app.use(bodyParser.json());
+    app.use(
+      cors({
+        origin: "*",
+      })
+    );
 
     app.use("/api/v1", router);
 

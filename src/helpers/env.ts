@@ -11,3 +11,10 @@ export const DATABASE_USERNAME: string = process.env
 export const DATABASE_PASSWORD: string = process.env
   .DATABASE_PASSWORD as unknown as string;
 export const PORT = process.env.PORT || 3000;
+export const SECRET = process.env.SECRET;
+export const CLOUDINARY_API_KEY: string = process.env
+  .CLOUDINARY_API_KEY as string;
+export const CLOUDINARY_API_SECRET: string = process.env
+  .CLOUDINARY_API_SECRET as string;
+export const CLOUDINARY_CLOUD_NAME: string = process.env
+  .CLOUDINARY_CLOUD_NAME as string;
