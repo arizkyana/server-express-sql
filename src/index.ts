@@ -1,13 +1,12 @@
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import { PORT } from "./helpers/env";
 
 import { AppDataSource } from "./data-source";
 // import { User } from "./entity/User";
 
 import router from "./routes/api";
-
-const PORT = process.env.PORT || 3000;
 
 async function init() {
   try {

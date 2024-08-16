@@ -2,13 +2,20 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entity/User";
 
+import {
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  DATABASE_URL,
+  DATABASE_PORT,
+} from "./helpers/env";
+
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "aws-0-ap-southeast-1.pooler.supabase.com",
+  host: DATABASE_URL,
   //   port: 5432,
-  port: 6543,
-  username: "postgres.wwmgwrjegqaspmpkvjnp",
-  password: "v5ya8lRG4fx79JUD",
+  port: DATABASE_PORT,
+  username: DATABASE_USERNAME,
+  password: DATABASE_PASSWORD,
   database: "postgres",
   synchronize: true,
   logging: false,
@@ -16,5 +23,3 @@ export const AppDataSource = new DataSource({
   migrations: [],
   subscribers: [],
 });
-
-// db password: v5ya8lRG4fx79JUD
