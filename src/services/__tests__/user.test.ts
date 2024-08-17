@@ -17,10 +17,7 @@ describe("User Unit Testing", () => {
       find() {
         return Promise.resolve([
           {
-            age: 10,
-            firstName: "AAA",
-            id: 1,
-            lastName: "BBB",
+            fullName: "AAA",
           },
         ] as User[]);
       },
