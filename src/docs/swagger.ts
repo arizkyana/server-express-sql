@@ -8,8 +8,12 @@ const doc = {
   },
   servers: [
     {
-      url: "http://localhost:3000/api",
+      url: "http://localhost:3000/api/v1",
       description: "Local Server",
+    },
+    {
+      url: "https://wcp-backend.vercel.app/api/v1",
+      description: "Dev Server",
     },
   ],
   components: {
