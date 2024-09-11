@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import { AppDataSource } from "../data-source";
 import { Product } from "../entity/Product";
 import { FindOptionsWhere, Like } from "typeorm";
+import { TUserSession } from "../helpers/interfaces";
 
 export interface IPaginationQuery {
   page: number;
@@ -60,7 +61,7 @@ export const findAll = async (query: IPaginationQuery) => {
     limit: Number(limit),
   };
 };
-export const create = async (payload: Product) => {
+export const create = async (payload: Product, user: TUserSession) => {
   await createValidationSchema.validate(payload);
 
   const { name, price, category, description, images, qty, slug } = payload;
@@ -73,7 +74,7 @@ export const create = async (payload: Product) => {
   product.images = images;
   product.qty = qty;
   product.slug = slug;
-  product.createdBy = 1; // should get from jwt and make relation with tabel User
+  product.createdBy = user.id;
 
   const results = productRepo.save(product);
   return results;
@@ -91,6 +92,51 @@ export const findBySlug = async (slug: string) => {
   });
   return result;
 };
+
+export const findByUser = async (
+  query: IPaginationQuery,
+  user: TUserSession
+) => {
+  const { limit, page, search } = query;
+
+  await paginationSchema.validate({ page, limit });
+
+  let where: FindOptionsWhere<Product>[] = [];
+
+  if (search) {
+    where = [
+      {
+        name: Like(`%${search}%`),
+      },
+    ];
+  }
+
+  const queryProductRepo = productRepo
+    .createQueryBuilder("product")
+    .leftJoin("product.createdBy", "id")
+    .where("createdBy = :userId", { userId: user.id })
+    .skip((page - 1) * limit)
+    .take(limit);
+
+  let result = queryProductRepo;
+
+  if (search) {
+    result = queryProductRepo.andWhere(" name LIKE %:name% ", { name: search });
+  }
+
+  const data = await result.execute();
+
+  const total = await productRepo.countBy(where);
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+    page: Number(page),
+    limit: Number(limit),
+  };
+};
+
 export const update = async (id: number, payload: Product) => {
   const result = await AppDataSource.createQueryBuilder()
     .update(Product)

@@ -5,6 +5,15 @@ import { failedResponse, okResponse } from "../helpers/response";
 
 export default {
   async login(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Auth']
+     #swagger.requestBody = {
+      required: true,
+      schema: {
+        $ref: "#/components/schemas/LoginRequest"
+      }
+     }
+     */
     try {
       const result = await login(req.body as ILogin);
       return okResponse({
@@ -22,6 +31,15 @@ export default {
     }
   },
   async register(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Auth']
+     #swagger.requestBody = {
+      required: true,
+      schema: {
+        $ref: "#/components/schemas/RegisterRequest"
+      }
+     }
+     */
     try {
       const result = await register(req.body as IRegister);
       return okResponse({

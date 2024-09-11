@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  ManyToOne,
 } from "typeorm";
 
 import { getSlugId } from "../helpers/id";
+import { User } from "./User";
 
 @Entity()
 export class Product {
@@ -66,10 +68,7 @@ export class Product {
   })
   updatedAt: string;
 
-  @Column({
-    type: "int",
-    default: 1,
-  })
+  @ManyToOne(() => User, (user) => user.id)
   createdBy: number;
 
   @BeforeInsert()

@@ -1,21 +1,20 @@
 import { Request, Response } from "express";
 import {
+  create,
+  findAll,
+  findOne,
+  IPaginationQuery,
+  remove,
+  update,
+} from "../services/bundle.service";
+import { Bundle } from "../entity/Bundle";
+import { IReqUser } from "../helpers/interfaces";
+import { User } from "../entity/User";
+import {
   failedResponse,
   HTTP_RESPONSE_CODE,
   okResponse,
 } from "../helpers/response";
-import {
-  findAll,
-  create,
-  findById,
-  findBySlug,
-  findByUser,
-  update,
-  remove,
-  IPaginationQuery,
-} from "../services/product.service";
-import { Product } from "../entity/Product";
-import { IReqUser, TUserSession } from "../helpers/interfaces";
 
 export default {
   async findAll(req: Request, res: Response) {
@@ -26,7 +25,7 @@ export default {
         return failedResponse({
           res,
           data: null,
-          message: "Product not found",
+          message: "Section not found",
           status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
         });
       }
@@ -34,7 +33,7 @@ export default {
       return okResponse({
         res,
         data: results,
-        message: "Success fetch products!",
+        message: "Success fetch courses!",
       });
     } catch (error) {
       const err = error as unknown as Error;
@@ -47,16 +46,14 @@ export default {
   },
   async create(req: IReqUser, res: Response) {
     try {
-      const result = await create(
-        req.body as Product,
-        req.user as TUserSession
-      );
-
+      const bundle = req.body.bundle as Bundle;
+      const course = req.body.course as number;
+      const result = await create(bundle, course, req.user as User);
       if (!result) {
         return failedResponse({
           res,
           data: null,
-          message: "Product not found",
+          message: "Section not found",
           status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
         });
       }
@@ -64,7 +61,7 @@ export default {
       return okResponse({
         res,
         data: result,
-        message: "Success create product!",
+        message: "Success create course!",
       });
     } catch (error) {
       const err = error as unknown as Error;
@@ -75,16 +72,16 @@ export default {
       });
     }
   },
-  async findById(req: Request, res: Response) {
+  async findOne(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const result = await findById(id as unknown as number);
+      const result = await findOne(id as unknown as number);
 
       if (!result) {
         return failedResponse({
           res,
           data: null,
-          message: "Product not found",
+          message: "Section not found",
           status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
         });
       }
@@ -92,66 +89,7 @@ export default {
       return okResponse({
         res,
         data: result,
-        message: "Success get product!",
-      });
-    } catch (error) {
-      const err = error as unknown as Error;
-      return failedResponse({
-        res,
-        data: null,
-        message: err.message,
-      });
-    }
-  },
-  async findBySlug(req: Request, res: Response) {
-    try {
-      const { slug } = req.params;
-      const result = await findBySlug(slug as unknown as string);
-
-      if (!result) {
-        return failedResponse({
-          res,
-          data: null,
-          message: "Product not found",
-          status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
-        });
-      }
-
-      return okResponse({
-        res,
-        data: result,
-        message: "Success get product by slug!",
-      });
-    } catch (error) {
-      const err = error as unknown as Error;
-      return failedResponse({
-        res,
-        data: null,
-        message: err.message,
-      });
-    }
-  },
-  async findByUser(req: IReqUser, res: Response) {
-    try {
-      const user = req.user as TUserSession;
-      const result = await findByUser(
-        req.query as unknown as IPaginationQuery,
-        user
-      );
-
-      if (!result) {
-        return failedResponse({
-          res,
-          data: null,
-          message: "Product not found",
-          status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
-        });
-      }
-
-      return okResponse({
-        res,
-        data: result,
-        message: "Success get product by user!",
+        message: "Course get product!",
       });
     } catch (error) {
       const err = error as unknown as Error;
@@ -165,13 +103,15 @@ export default {
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const result = await update(id as unknown as number, req.body as Product);
+      const bundle = req.body.bundle as Bundle;
+      const course = req.body.course as number;
+      const result = await update(Number(id), bundle, course);
 
       if (!result) {
         return failedResponse({
           res,
           data: null,
-          message: "Product not found",
+          message: "Section not found",
           status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
         });
       }
@@ -179,7 +119,7 @@ export default {
       return okResponse({
         res,
         data: result,
-        message: "Success update product!",
+        message: "Success update course!",
       });
     } catch (error) {
       const err = error as unknown as Error;
@@ -199,7 +139,7 @@ export default {
         return failedResponse({
           res,
           data: null,
-          message: "Product not found",
+          message: "Section not found",
           status: HTTP_RESPONSE_CODE.WRONG_CLIENT,
         });
       }
@@ -207,7 +147,7 @@ export default {
       return okResponse({
         res,
         data: result,
-        message: "Succes remove product",
+        message: "Succes remove course",
       });
     } catch (error) {
       const err = error as unknown as Error;

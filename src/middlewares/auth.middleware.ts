@@ -42,7 +42,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   }
 
   (req as IReqUser).user = {
-    id: user.id,
+    id: Number(user.id),
     role: user.role,
   };
 

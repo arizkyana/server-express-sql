@@ -1,10 +1,12 @@
 import { Request } from "express";
 
+export type TUserSession = {
+  role: string;
+  id: number;
+};
+
 export interface IReqUser extends Request {
-  user: {
-    role: string;
-    id: string;
-  };
+  user: TUserSession;
 }
 
 export interface IPaginationQuery {
